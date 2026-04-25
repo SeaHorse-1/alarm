@@ -7,10 +7,10 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import kotlinx.coroutines.flow.first
-import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
+import java.time.temporal.ChronoUnit
 import java.time.ZoneId
 import kotlin.random.Random
 
@@ -75,7 +75,7 @@ class AlarmScheduler(
         val selectedDays = alarm.activeDays.ifEmpty { defaultActiveDays() }
         val start = LocalTime.of(alarm.startHour, alarm.startMinute)
         val end = LocalTime.of(alarm.endHour, alarm.endMinute)
-        val earliestMoment = now.plusMinutes(1)
+        val earliestMinute = now.nextEligibleMinute()
 
         repeat(14) { offset ->
             val candidateDate = now.toLocalDate().plusDays(offset.toLong())
@@ -87,29 +87,20 @@ class AlarmScheduler(
             val candidateEnd = LocalDateTime.of(candidateDate, end)
 
             if (candidateStart == candidateEnd) {
-                if (!candidateStart.isBefore(earliestMoment)) {
+                if (!candidateStart.isBefore(earliestMinute)) {
                     return candidateStart
                 }
                 return@repeat
             }
 
-            val earliest = maxOf(candidateStart, earliestMoment)
-            if (earliest.isAfter(candidateEnd)) {
+            val firstEligibleMinute = maxOf(candidateStart, earliestMinute)
+            if (firstEligibleMinute.isAfter(candidateEnd)) {
                 return@repeat
             }
 
-            val startEpoch = earliest.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            val endEpoch = candidateEnd.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli()
-            val randomEpoch = if (startEpoch == endEpoch) {
-                startEpoch
-            } else {
-                Random.nextLong(startEpoch, endEpoch + 1)
-            }
-
-            return LocalDateTime.ofInstant(
-                Instant.ofEpochMilli(randomEpoch),
-                ZoneId.systemDefault(),
-            )
+            val minuteSpan = ChronoUnit.MINUTES.between(firstEligibleMinute, candidateEnd).toInt()
+            val randomMinuteOffset = if (minuteSpan == 0) 0 else Random.nextInt(minuteSpan + 1)
+            return firstEligibleMinute.plusMinutes(randomMinuteOffset.toLong())
         }
 
         val fallbackDate = nextActiveDateAfter(now.toLocalDate(), selectedDays)
@@ -158,4 +149,8 @@ class AlarmScheduler(
     companion object {
         const val EXTRA_ALARM_ID = "alarm_id"
     }
+}
+
+private fun LocalDateTime.nextEligibleMinute(): LocalDateTime {
+    return truncatedTo(ChronoUnit.MINUTES).plusMinutes(1)
 }
