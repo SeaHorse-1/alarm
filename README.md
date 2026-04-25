@@ -1,17 +1,17 @@
 # Interval Alarm
 
-\u4e00\u4e2a\u53ea\u9762\u5411 Android \u7684\u95f9\u949f App\uff0c\u652f\u6301\u591a\u4e2a\u95f9\u949f\uff0c\u6bcf\u4e2a\u95f9\u949f\u90fd\u53ef\u4ee5\u72ec\u7acb\u914d\u7f6e\u3002
+一个只面向 Android 的闹钟 App，支持多个闹钟，每个闹钟都可以独立配置。
 
-## \u6838\u5fc3\u89c4\u5219
+## 核心规则
 
-- \u6bcf\u4e2a\u95f9\u949f\u90fd\u6709\u4e00\u4e2a\u5de6\u8fb9\u754c\u65f6\u95f4\u548c\u53f3\u8fb9\u754c\u65f6\u95f4\u3002
-- \u5982\u679c\u4e24\u4e2a\u65f6\u95f4\u76f8\u540c\uff0c\u5c31\u5728\u8fd9\u4e2a\u56fa\u5b9a\u65f6\u523b\u89e6\u53d1\u3002
-- \u5982\u679c\u4e24\u4e2a\u65f6\u95f4\u4e0d\u540c\uff0c\u5c31\u5728\u8fd9\u4e2a\u533a\u95f4\u5185\u968f\u673a\u9009\u62e9\u4e00\u4e2a\u672a\u6765\u65f6\u95f4\u70b9\u89e6\u53d1\u3002
-- \u5de6\u8fb9\u754c\u4e0d\u80fd\u665a\u4e8e\u53f3\u8fb9\u754c\uff0c\u53f3\u8fb9\u754c\u4e0d\u80fd\u65e9\u4e8e\u5de6\u8fb9\u754c\uff0c\u754c\u9762\u4f1a\u81ea\u52a8\u6821\u6b63\u3002
-- \u53ef\u4ee5\u8bbe\u7f6e\u751f\u6548\u7684\u661f\u671f\u89c4\u5219\uff0c\u652f\u6301\u5355\u72ec\u67d0\u4e00\u5929\u3001\u5de5\u4f5c\u65e5\u3001\u5468\u672b\u548c\u81ea\u5b9a\u4e49\u591a\u9009\u3002
-- \u65b0\u5efa\u95f9\u949f\u9ed8\u8ba4\u4e3a\u6bcf\u5929\u751f\u6548\u3002
+- 每个闹钟都有一个左边界时间和右边界时间。
+- 如果两个时间相同，就在这个固定时刻触发。
+- 如果两个时间不同，就在这个区间内随机选择一个未来时间点触发。
+- 左边界不能晚于右边界，右边界不能早于左边界，界面会自动校正。
+- 可以设置生效的星期规则，支持单独某一天、工作日、周末和自定义多选。
+- 新建闹钟默认每天生效。
 
-## \u6280\u672f\u6808
+## 技术栈
 
 - Kotlin
 - Jetpack Compose
@@ -19,14 +19,14 @@
 - AlarmManager + BroadcastReceiver + Foreground Service
 - DataStore
 
-## \u4e3b\u8981\u6587\u4ef6
+## 主要文件
 
-- [MainActivity.kt](/C:/Users/19765/Documents/New%20project/app/src/main/java/com/example/intervalalarm/MainActivity.kt)
-- [AlarmScheduler.kt](/C:/Users/19765/Documents/New%20project/app/src/main/java/com/example/intervalalarm/AlarmScheduler.kt)
-- [AlarmPreferences.kt](/C:/Users/19765/Documents/New%20project/app/src/main/java/com/example/intervalalarm/AlarmPreferences.kt)
-- [IntervalAlarmApp.kt](/C:/Users/19765/Documents/New%20project/app/src/main/java/com/example/intervalalarm/ui/IntervalAlarmApp.kt)
+- [MainActivity.kt](/D:/codexproject/alarm/app/src/main/java/com/example/intervalalarm/MainActivity.kt)
+- [AlarmScheduler.kt](/D:/codexproject/alarm/app/src/main/java/com/example/intervalalarm/AlarmScheduler.kt)
+- [AlarmPreferences.kt](/D:/codexproject/alarm/app/src/main/java/com/example/intervalalarm/AlarmPreferences.kt)
+- [IntervalAlarmApp.kt](/D:/codexproject/alarm/app/src/main/java/com/example/intervalalarm/ui/IntervalAlarmApp.kt)
 
-## \u8bf4\u660e
+## 说明
 
-- \u5f53\u524d\u4ed3\u5e93\u91cc\u6ca1\u6709 Gradle Wrapper\uff0c\u4e5f\u6ca1\u6709\u672c\u673a `gradle` \u547d\u4ee4\uff0c\u6240\u4ee5\u8fd9\u8fb9\u6ca1\u6cd5\u76f4\u63a5\u8dd1\u6784\u5efa\u6821\u9a8c\u3002
-- \u5de5\u7a0b\u53ef\u4ee5\u76f4\u63a5\u7528 Android Studio \u6253\u5f00\uff0c\u540c\u6b65\u540e\u5373\u53ef\u7ee7\u7eed\u8fd0\u884c\u6216\u8865\u5168 Wrapper\u3002
+- 当前仓库里没有 Gradle Wrapper，也没有本机 `gradle` 命令，所以这里没法直接跑构建校验。
+- 工程可以直接用 Android Studio 打开，同步后即可继续运行或补全 Wrapper。
