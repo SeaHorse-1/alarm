@@ -1,6 +1,6 @@
 # Interval Alarm
 
-一个只面向 Android 的闹钟 App，支持多个闹钟，每个闹钟都可以独立配置。
+一个只面向 Android 的闹钟 App，支持多个闹钟，每个闹钟都可以独立配置。项目通过 Codex 开发与迭代。
 
 ## 核心规则
 
