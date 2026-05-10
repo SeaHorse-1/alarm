@@ -51,13 +51,13 @@ fun decodeDays(mask: Int): Set<Int> {
 
 fun dayLabel(day: Int): String {
     return when (day) {
-        DayOfWeek.MONDAY.value -> "\u5468\u4e00"
-        DayOfWeek.TUESDAY.value -> "\u5468\u4e8c"
-        DayOfWeek.WEDNESDAY.value -> "\u5468\u4e09"
-        DayOfWeek.THURSDAY.value -> "\u5468\u56db"
-        DayOfWeek.FRIDAY.value -> "\u5468\u4e94"
-        DayOfWeek.SATURDAY.value -> "\u5468\u516d"
-        DayOfWeek.SUNDAY.value -> "\u5468\u65e5"
+        DayOfWeek.MONDAY.value -> "周一"
+        DayOfWeek.TUESDAY.value -> "周二"
+        DayOfWeek.WEDNESDAY.value -> "周三"
+        DayOfWeek.THURSDAY.value -> "周四"
+        DayOfWeek.FRIDAY.value -> "周五"
+        DayOfWeek.SATURDAY.value -> "周六"
+        DayOfWeek.SUNDAY.value -> "周日"
         else -> ""
     }
 }
@@ -69,10 +69,10 @@ fun AlarmItem.activeDaysSummary(): String {
     val everyday = DayOfWeek.entries.map { it.value }
 
     return when {
-        normalized == everyday -> "\u6bcf\u5929"
-        normalized == workdays -> "\u5de5\u4f5c\u65e5"
-        normalized == weekends -> "\u5468\u672b"
+        normalized == everyday -> "每天"
+        normalized == workdays -> "工作日"
+        normalized == weekends -> "周末"
         normalized.size == 1 -> dayLabel(normalized.first())
-        else -> normalized.joinToString("\u3001") { dayLabel(it) }
+        else -> normalized.joinToString("、") { dayLabel(it) }
     }
 }

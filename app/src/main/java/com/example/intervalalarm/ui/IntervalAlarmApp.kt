@@ -86,7 +86,7 @@ fun IntervalAlarmApp(
             ExtendedFloatingActionButton(
                 onClick = { editingAlarm = defaultAlarmItem() },
                 icon = { Icon(Icons.Outlined.Add, contentDescription = null) },
-                text = { Text("\u65b0\u589e\u95f9\u949f") },
+                text = { Text("新增闹钟") },
             )
         },
     ) { innerPadding ->
@@ -114,14 +114,14 @@ fun IntervalAlarmApp(
                         onDelete = {
                             scope.launch {
                                 scheduler.delete(alarm.id)
-                                snackbarHostState.showSnackbar("\u95f9\u949f\u5df2\u5220\u9664\u3002")
+                                snackbarHostState.showSnackbar("闹钟已删除。")
                             }
                         },
                         onToggleEnabled = { enabled ->
                             scope.launch {
                                 if (enabled && !exactAlarmReady) {
                                     snackbarHostState.showSnackbar(
-                                        "\u9700\u8981\u5148\u5141\u8bb8\u7cbe\u786e\u95f9\u949f\u6743\u9650\u3002",
+                                        "需要先允许精确闹钟权限。",
                                     )
                                     onRequestExactAlarmPermission()
                                     return@launch
@@ -129,7 +129,7 @@ fun IntervalAlarmApp(
 
                                 if (enabled && !notificationReady && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     snackbarHostState.showSnackbar(
-                                        "\u5efa\u8bae\u6253\u5f00\u901a\u77e5\u6743\u9650\uff0c\u5426\u5219\u54cd\u94c3\u901a\u77e5\u53ef\u80fd\u4e0d\u53ef\u89c1\u3002",
+                                        "建议打开通知权限，否则响铃通知可能不可见。",
                                     )
                                     onRequestNotificationPermission()
                                 }
@@ -138,17 +138,17 @@ fun IntervalAlarmApp(
                                     val next = scheduler.schedule(alarm.copy(enabled = true))
                                     if (next != null) {
                                         snackbarHostState.showSnackbar(
-                                            "\u5df2\u5f00\u542f\uff0c\u4e0b\u6b21\u89e6\u53d1\u5728 ${next.formatFriendly()}\u3002",
+                                            "已开启，下次触发在 ${next.formatFriendly()}。",
                                         )
                                     } else {
                                         snackbarHostState.showSnackbar(
-                                            "\u672a\u80fd\u8bbe\u7f6e\u7cbe\u786e\u95f9\u949f\uff0c\u8be5\u95f9\u949f\u5df2\u88ab\u5173\u95ed\u3002",
+                                            "未能设置精确闹钟，该闹钟已被关闭。",
                                         )
                                         onRequestExactAlarmPermission()
                                     }
                                 } else {
                                     scheduler.cancel(alarm.id)
-                                    snackbarHostState.showSnackbar("\u95f9\u949f\u5df2\u5173\u95ed\u3002")
+                                    snackbarHostState.showSnackbar("闹钟已关闭。")
                                 }
                             }
                         },
@@ -168,7 +168,7 @@ fun IntervalAlarmApp(
                     if (edited.enabled) {
                         if (!exactAlarmReady) {
                             snackbarHostState.showSnackbar(
-                                "\u9700\u8981\u5148\u5141\u8bb8\u7cbe\u786e\u95f9\u949f\u6743\u9650\u3002",
+                                "需要先允许精确闹钟权限。",
                             )
                             onRequestExactAlarmPermission()
                             return@launch
@@ -177,14 +177,14 @@ fun IntervalAlarmApp(
                         if (next != null) {
                             snackbarHostState.showSnackbar(
                                 if (existing) {
-                                    "\u95f9\u949f\u5df2\u66f4\u65b0\uff0c\u4e0b\u6b21\u89e6\u53d1\u5728 ${next.formatFriendly()}\u3002"
+                                    "闹钟已更新，下次触发在 ${next.formatFriendly()}。"
                                 } else {
-                                    "\u95f9\u949f\u5df2\u65b0\u589e\uff0c\u4e0b\u6b21\u89e6\u53d1\u5728 ${next.formatFriendly()}\u3002"
+                                    "闹钟已新增，下次触发在 ${next.formatFriendly()}。"
                                 },
                             )
                         } else {
                             snackbarHostState.showSnackbar(
-                                "\u672a\u80fd\u8bbe\u7f6e\u7cbe\u786e\u95f9\u949f\uff0c\u8be5\u95f9\u949f\u5df2\u88ab\u5173\u95ed\u3002",
+                                "未能设置精确闹钟，该闹钟已被关闭。",
                             )
                             onRequestExactAlarmPermission()
                         }
@@ -192,9 +192,9 @@ fun IntervalAlarmApp(
                         scheduler.saveDisabled(edited)
                         snackbarHostState.showSnackbar(
                             if (existing) {
-                                "\u95f9\u949f\u5df2\u4fdd\u5b58\u3002"
+                                "闹钟已保存。"
                             } else {
-                                "\u65b0\u95f9\u949f\u5df2\u521b\u5efa\u3002"
+                                "新闹钟已创建。"
                             },
                         )
                     }
@@ -222,16 +222,16 @@ private fun HeaderCard(
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(
-                text = "\u968f\u673a\u533a\u95f4\u95f9\u949f",
+                text = "随机区间闹钟",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
             )
             Text(
-                text = "\u6bcf\u4e2a\u95f9\u949f\u90fd\u53ef\u4ee5\u5355\u72ec\u8bbe\u5b9a\u65f6\u95f4\u533a\u95f4\u548c\u751f\u6548\u661f\u671f\u3002\u65b0\u95f9\u949f\u9ed8\u8ba4\u662f\u6bcf\u5929\u751f\u6548\u3002",
+                text = "每个闹钟都可以单独设定时间区间和生效星期。新闹钟默认是每天生效。",
                 color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.85f),
             )
             Text(
-                text = "\u5f53\u524d\u5171 $alarmCount \u4e2a\u95f9\u949f",
+                text = "当前共 $alarmCount 个闹钟",
                 style = MaterialTheme.typography.titleSmall,
             )
             PermissionChips(
@@ -251,9 +251,9 @@ private fun EmptyStateCard() {
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(10.dp),
         ) {
-            Text("\u8fd8\u6ca1\u6709\u95f9\u949f", style = MaterialTheme.typography.titleLarge)
+            Text("还没有闹钟", style = MaterialTheme.typography.titleLarge)
             Text(
-                "\u70b9\u51fb\u53f3\u4e0b\u89d2\u201c\u65b0\u589e\u95f9\u949f\u201d\uff0c\u521b\u5efa\u7b2c\u4e00\u4e2a\u533a\u95f4\u95f9\u949f\u3002",
+                "点击右下角“新增闹钟”，创建第一个区间闹钟。",
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
@@ -286,7 +286,7 @@ private fun AlarmListCard(
                         fontWeight = FontWeight.SemiBold,
                     )
                     Text(
-                        text = "\u751f\u6548\u65e5\uff1a${alarm.activeDaysSummary()}",
+                        text = "生效日：${alarm.activeDaysSummary()}",
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
@@ -298,9 +298,9 @@ private fun AlarmListCard(
 
             Text(
                 text = if (alarm.enabled && alarm.nextTriggerAt != null) {
-                    "\u4e0b\u6b21\u89e6\u53d1\uff1a${alarm.nextTriggerAt.formatFriendly()}"
+                    "下次触发：${alarm.nextTriggerAt.formatFriendly()}"
                 } else {
-                    "\u5f53\u524d\u672a\u5f00\u542f"
+                    "当前未开启"
                 },
                 style = MaterialTheme.typography.bodyMedium,
             )
@@ -310,10 +310,10 @@ private fun AlarmListCard(
                 horizontalArrangement = Arrangement.End,
             ) {
                 IconButton(onClick = onEdit) {
-                    Icon(Icons.Outlined.Edit, contentDescription = "\u7f16\u8f91")
+                    Icon(Icons.Outlined.Edit, contentDescription = "编辑")
                 }
                 IconButton(onClick = onDelete) {
-                    Icon(Icons.Outlined.Delete, contentDescription = "\u5220\u9664")
+                    Icon(Icons.Outlined.Delete, contentDescription = "删除")
                 }
             }
         }
@@ -335,9 +335,9 @@ private fun AlarmEditorDialog(
         title = {
             Text(
                 if (initialAlarm == draft && initialAlarm.nextTriggerAt == null && !initialAlarm.enabled) {
-                    "\u65b0\u589e\u95f9\u949f"
+                    "新增闹钟"
                 } else {
-                    "\u7f16\u8f91\u95f9\u949f"
+                    "编辑闹钟"
                 },
             )
         },
@@ -349,7 +349,7 @@ private fun AlarmEditorDialog(
                 verticalArrangement = Arrangement.spacedBy(14.dp),
             ) {
                 Text(
-                    "\u5de6\u8fb9\u754c\u4e0d\u80fd\u665a\u4e8e\u53f3\u8fb9\u754c\uff0c\u65b0\u95f9\u949f\u9ed8\u8ba4\u6bcf\u5929\u751f\u6548\u3002",
+                    "左边界不能晚于右边界，新闹钟默认每天生效。",
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 FlowRow(
@@ -357,27 +357,27 @@ private fun AlarmEditorDialog(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     EditorTimeChip(
-                        label = "\u5f00\u59cb",
+                        label = "开始",
                         value = draft.startLabel(),
                         onClick = { pickerMode = PickerMode.Start },
                     )
                     EditorTimeChip(
-                        label = "\u7ed3\u675f",
+                        label = "结束",
                         value = draft.endLabel(),
                         onClick = { pickerMode = PickerMode.End },
                     )
                 }
                 Text(
-                    text = "\u5f53\u524d\u751f\u6548\uff1a${draft.activeDaysSummary()}",
+                    text = "当前生效：${draft.activeDaysSummary()}",
                     style = MaterialTheme.typography.titleSmall,
                 )
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
                     verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
-                    PresetChip("\u5de5\u4f5c\u65e5", draft.activeDays == workdays()) { draft = draft.copy(activeDays = workdays()) }
-                    PresetChip("\u5468\u672b", draft.activeDays == weekends()) { draft = draft.copy(activeDays = weekends()) }
-                    PresetChip("\u6bcf\u5929", draft.activeDays == everyday()) { draft = draft.copy(activeDays = everyday()) }
+                    PresetChip("工作日", draft.activeDays == workdays()) { draft = draft.copy(activeDays = workdays()) }
+                    PresetChip("周末", draft.activeDays == weekends()) { draft = draft.copy(activeDays = weekends()) }
+                    PresetChip("每天", draft.activeDays == everyday()) { draft = draft.copy(activeDays = everyday()) }
                 }
                 FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -400,7 +400,7 @@ private fun AlarmEditorDialog(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Text("\u4fdd\u5b58\u540e\u7acb\u5373\u542f\u7528")
+                    Text("保存后立即启用")
                     Switch(
                         checked = draft.enabled,
                         onCheckedChange = { draft = draft.copy(enabled = it) },
@@ -410,12 +410,12 @@ private fun AlarmEditorDialog(
         },
         confirmButton = {
             TextButton(onClick = { onSave(draft) }) {
-                Text("\u4fdd\u5b58")
+                Text("保存")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("\u53d6\u6d88")
+                Text("取消")
             }
         },
     )
@@ -424,7 +424,7 @@ private fun AlarmEditorDialog(
         TimePickerDialog(
             initialHour = if (pickerMode == PickerMode.Start) draft.startHour else draft.endHour,
             initialMinute = if (pickerMode == PickerMode.Start) draft.startMinute else draft.endMinute,
-            title = if (pickerMode == PickerMode.Start) "\u5f00\u59cb\u65f6\u95f4" else "\u7ed3\u675f\u65f6\u95f4",
+            title = if (pickerMode == PickerMode.Start) "开始时间" else "结束时间",
             onDismiss = { pickerMode = null },
             onConfirm = { hour, minute ->
                 draft = when (pickerMode) {
@@ -498,9 +498,9 @@ private fun PermissionChips(
             label = {
                 Text(
                     if (exactAlarmReady) {
-                        "\u7cbe\u786e\u95f9\u949f\u6743\u9650\u5df2\u5c31\u7eea"
+                        "精确闹钟权限已就绪"
                     } else {
-                        "\u7f3a\u5c11\u7cbe\u786e\u95f9\u949f\u6743\u9650"
+                        "缺少精确闹钟权限"
                     },
                 )
             },
@@ -510,9 +510,9 @@ private fun PermissionChips(
             label = {
                 Text(
                     if (notificationReady) {
-                        "\u901a\u77e5\u6743\u9650\u5df2\u5c31\u7eea"
+                        "通知权限已就绪"
                     } else {
-                        "\u7f3a\u5c11\u901a\u77e5\u6743\u9650"
+                        "缺少通知权限"
                     },
                 )
             },
@@ -548,12 +548,12 @@ private fun TimePickerDialog(
         },
         confirmButton = {
             TextButton(onClick = { onConfirm(state.hour, state.minute) }) {
-                Text("\u786e\u5b9a")
+                Text("确定")
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("\u53d6\u6d88")
+                Text("取消")
             }
         },
     )
